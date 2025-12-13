@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/wamp64/www/wplayground/wp-content/themes/**)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
