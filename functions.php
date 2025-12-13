@@ -9,12 +9,14 @@
  * Enqueue parent and child theme styles
  */
 function frost_child_enqueue_styles() {
+	$parent_theme = wp_get_theme()->parent();
+
 	// Enqueue parent theme stylesheet
 	wp_enqueue_style(
 		'frost-parent-style',
 		get_template_directory_uri() . '/style.css',
 		array(),
-		wp_get_theme()->parent()->get('Version')
+		$parent_theme ? $parent_theme->get('Version') : wp_get_theme()->get('Version')
 	);
 
 	// Enqueue child theme stylesheet
