@@ -10,13 +10,17 @@
  */
 function frost_child_enqueue_styles() {
 	$parent_theme = wp_get_theme()->parent();
+	$parent_version = wp_get_theme()->get('Version');
+	if ( $parent_theme !== null ) {
+		$parent_version = $parent_theme->get('Version');
+	}
 
 	// Enqueue parent theme stylesheet
 	wp_enqueue_style(
 		'frost-parent-style',
 		get_template_directory_uri() . '/style.css',
 		array(),
-		$parent_theme ? $parent_theme->get('Version') : wp_get_theme()->get('Version')
+		$parent_version
 	);
 
 	// Enqueue child theme stylesheet
