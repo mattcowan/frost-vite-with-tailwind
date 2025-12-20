@@ -1,0 +1,29 @@
+/* Tailwind CSS v4 - Import the base theme */
+@import "tailwindcss";
+
+/* ========================================
+   Block Styles
+   ======================================== */
+/* Import block-specific styles here */
+/* Example: @import "./blocks/your-block-name.css"; */
+
+/* ========================================
+   Custom Component Classes
+   ======================================== */
+/* In Tailwind v4, @apply has been removed - use standard CSS with theme() function */
+.btn-primary {
+  background-color: theme(colors.blue.500);
+  color: theme(colors.white);
+  font-weight: theme(fontWeight.bold);
+  padding: theme(spacing.2) theme(spacing.4);
+  border-radius: theme(borderRadius.DEFAULT);
+
+  &:hover {
+    background-color: theme(colors.blue.700);
+  }
+}
+
+/* ========================================
+   Global Custom Styles
+   ======================================== */
+/* Add your custom SCSS-style nested CSS here */

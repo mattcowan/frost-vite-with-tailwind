@@ -1,0 +1,36 @@
+{
+  "name": "frost-child-tailwind",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Child theme for Frost with Tailwind CSS v4, Vite build tooling, and hot reload support",
+  "author": "matthewneilcowan",
+  "license": "GPL-3.0-or-later",
+  "keywords": [
+    "wordpress",
+    "theme",
+    "frost",
+    "tailwindcss",
+    "vite",
+    "gutenberg",
+    "blocks"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "watch": "vite build --watch",
+    "build": "vite build",
+    "verify": "node verify-build.js",
+    "build:verify": "npm run build && npm run verify",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.17",
+    "autoprefixer": "^10.4.22",
+    "postcss": "^8.5.6",
+    "vite": "^7.2.7",
+    "vite-plugin-remove-console": "^2.2.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}
