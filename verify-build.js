@@ -6,7 +6,7 @@
 
 import { readFileSync, existsSync } from 'fs';
 import { fileURLToPath } from 'url';
-import { dirname, join, resolve, normalize } from 'path';
+import { dirname, join, resolve, normalize, sep } from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -23,7 +23,7 @@ const distDir = resolve(__dirname, 'dist');
 function isPathSafe(filePath) {
     const normalized = normalize(filePath);
     const resolved = resolve(distDir, normalized);
-    return resolved.startsWith(distDir + dirname.sep) || resolved === distDir;
+    return resolved.startsWith(distDir + sep) || resolved === distDir;
 }
 
 console.log('🔍 Verifying Vite build...\n');

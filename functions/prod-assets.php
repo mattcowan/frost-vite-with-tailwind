@@ -166,13 +166,11 @@ function frost_child_enqueue_assets() {
 
         $js_file = $manifest['src/js/main.js']['file'];
 
-        // Validate path doesn't traverse and filename matches Vite format (name.hash.js)
-        // Hash is exactly 8 base64url characters: A-Za-z0-9_- (e.g., main.DtwKV1wl.js or main.CSQ746O9.js)
-        // Ensure no directory separators to prevent traversal via subdirectories
+        // Validate path doesn't traverse - allow forward slashes for subdirectories but block traversal and backslashes
+        // Hash is exactly 8 base64url characters: A-Za-z0-9_- (e.g., main.DtwKV1wl.js or assets/main.DtwKV1wl.js)
         if (!str_contains($js_file, '..') &&
-            !str_contains($js_file, '/') &&
             !str_contains($js_file, '\\') &&
-            preg_match('/^[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]{8}\.js$/', $js_file)) {
+            preg_match('/^(?:[a-zA-Z0-9_-]+\/)*[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]{8}\.js$/', $js_file)) {
             // Use 'strategy' parameter if WP >= 6.3.0, otherwise use wp_script_add_data for defer
             if ( version_compare( get_bloginfo( 'version' ), '6.3.0', '>=' ) ) {
                 wp_enqueue_script(
@@ -206,13 +204,11 @@ function frost_child_enqueue_assets() {
 
         $css_file = $manifest['src/css/main.css']['file'];
 
-        // Validate path doesn't traverse and filename matches Vite format (name.hash.css)
-        // Hash is exactly 8 base64url characters: A-Za-z0-9_- (e.g., style.DX2Go6rB.css or style.L98F1T-T.css)
-        // Ensure no directory separators to prevent traversal via subdirectories
+        // Validate path doesn't traverse - allow forward slashes for subdirectories but block traversal and backslashes
+        // Hash is exactly 8 base64url characters: A-Za-z0-9_- (e.g., style.DX2Go6rB.css or assets/style.L98F1T-T.css)
         if (!str_contains($css_file, '..') &&
-            !str_contains($css_file, '/') &&
             !str_contains($css_file, '\\') &&
-            preg_match('/^[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]{8}\.css$/', $css_file)) {
+            preg_match('/^(?:[a-zA-Z0-9_-]+\/)*[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]{8}\.css$/', $css_file)) {
             wp_enqueue_style(
                 'frost-child-main',
                 $dist_uri . $css_file,

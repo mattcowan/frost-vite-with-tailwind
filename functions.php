@@ -15,7 +15,7 @@
  * @return string The resolved IP address, or the hostname if resolution failed.
  */
 function frost_child_cached_dns_lookup($hostname) {
-    $transient_key = 'frost_child_dns_' . preg_replace('/[^a-z0-9_]/i', '_', $hostname);
+    $transient_key = 'frost_child_dns_' . md5($hostname);
     $cached_result = get_transient($transient_key);
 
     if ($cached_result !== false) {
@@ -99,8 +99,8 @@ function frost_child_is_dev_environment() {
     }
 
     // Check for localhost variants
-    if (in_array($server_name, ['localhost', '127.0.0.1', '::1'], true) ||
-        in_array($http_host_clean, ['localhost', '127.0.0.1', '::1'], true)) {
+    if (in_array($server_name, ['localhost', '127.0.0.1', '::1', '[::1]'], true) ||
+        in_array($http_host_clean, ['localhost', '127.0.0.1', '::1', '[::1]'], true)) {
         return true;
     }
 
