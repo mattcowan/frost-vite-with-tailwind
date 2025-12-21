@@ -1,4 +1,8 @@
 <?php
+// Prevent direct access
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 /**
  * Frost Child Theme Functions
  *
@@ -6,31 +10,9 @@
  */
 
 /**
- * Enqueue parent and child theme styles
+ * Include modular function files
  */
-function frost_child_enqueue_styles() {
-	$parent_theme = wp_get_theme()->parent();
-	$parent_version = wp_get_theme()->get('Version');
-	if ( $parent_theme !== null ) {
-		$parent_version = $parent_theme->get('Version');
-	}
+require_once get_stylesheet_directory() . '/functions/setup.php';
+require_once get_stylesheet_directory() . '/functions/svg-support.php';
 
-	// Enqueue parent theme stylesheet
-	if ( $parent_theme ) {
-		wp_enqueue_style(
-			'frost-parent-style',
-			get_template_directory_uri() . '/style.css',
-			array(),
-			$parent_theme->get('Version')
-		);
-	}
-
-	// Enqueue child theme stylesheet
-	wp_enqueue_style(
-		'frost-child-style',
-		get_stylesheet_uri(),
-		array('frost-parent-style'),
-		wp_get_theme()->get('Version')
-	);
-}
-add_action('wp_enqueue_scripts', 'frost_child_enqueue_styles');
+?>
