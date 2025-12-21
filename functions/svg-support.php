@@ -2,7 +2,7 @@
 /**
  * SVG Upload Support
  *
- * @package    frostvite
+ * @package    Frost_Child
  * @subpackage Functions
  */
 
