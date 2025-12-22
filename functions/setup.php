@@ -1,14 +1,15 @@
-<?php 
-// Prevent direct access
-if ( ! defined( 'ABSPATH' ) ) {
-    exit;
-}
+<?php
 /**
  * Theme Setup and Configuration
  *
  * @package Frost_Child
  * @since 1.0.0
  */
+
+// Prevent direct access
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 
 // Disable theme and plugin file editors
 if ( ! defined( 'DISALLOW_FILE_EDIT' ) ) {
