@@ -1,8 +1,8 @@
 <?php
-// Prevent direct access
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
+// Prevent direct access
 /**
  * Frost Child Theme Functions
  *
