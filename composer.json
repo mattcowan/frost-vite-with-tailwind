@@ -1,0 +1,13 @@
+{
+  "name": "frost/child-theme",
+  "description": "Frost child theme with SVG support",
+  "type": "wordpress-theme",
+  "require": {
+    "php": ">=8.0",
+    "enshrined/svg-sanitize": "^0.20"
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "sort-packages": true
+  }
+}

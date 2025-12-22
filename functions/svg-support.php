@@ -2,7 +2,7 @@
 /**
  * SVG Upload Support
  *
- * @package    Frost_Child
+ * @package    frost_child
  * @subpackage Functions
  */
 
@@ -10,6 +10,8 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+use enshrined\svgSanitize\Sanitizer;
 
 /**
  * Enable SVG uploads
@@ -20,13 +22,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param array $mimes Allowed MIME types.
  * @return array Modified MIME types array.
  */
-function frostvite_allow_svg_uploads( $mimes ) {
+function frost_child_allow_svg_uploads( $mimes ) {
 	$mimes['svg']  = 'image/svg+xml';
-	$mimes['svgz'] = 'image/svg+xml';
 
 	return $mimes;
 }
-add_filter( 'upload_mimes', 'frostvite_allow_svg_uploads' );
+add_filter( 'upload_mimes', 'frost_child_allow_svg_uploads' );
 
 /**
  * Check SVG file type
@@ -39,7 +40,7 @@ add_filter( 'upload_mimes', 'frostvite_allow_svg_uploads' );
  * @param array  $mimes Array of allowed MIME types.
  * @return array Modified file data array.
  */
-function frostvite_check_svg_filetype( $wp_check_filetype_and_ext, $file, $filename, $mimes ) {
+function frost_child_check_svg_filetype( $wp_check_filetype_and_ext, $file, $filename, $mimes ) {
 	if ( ! $wp_check_filetype_and_ext['type'] ) {
 		$check_filetype  = wp_check_filetype( $filename, $mimes );
 		$ext             = $check_filetype['ext'];
@@ -55,20 +56,19 @@ function frostvite_check_svg_filetype( $wp_check_filetype_and_ext, $file, $filen
 
 	return $wp_check_filetype_and_ext;
 }
-add_filter( 'wp_check_filetype_and_ext', 'frostvite_check_svg_filetype', 10, 4 );
+add_filter( 'wp_check_filetype_and_ext', 'frost_child_check_svg_filetype', 10, 4 );
 
 /**
  * Sanitize SVG uploads
  *
- * Proper SVG sanitization using DOMDocument to remove potentially malicious code.
- * Uses XML parsing instead of regex to prevent bypass vulnerabilities.
+ * Uses the enshrined/svg-sanitize library for robust SVG sanitization.
  *
  * @param array $file The uploaded file array.
  * @return array The file array.
  */
-function frostvite_sanitize_svg_upload( $file ) {
+function frost_child_sanitize_svg_upload( $file ) {
 	// Only process SVG files
-	if ( 'image/svg+xml' !== $file['type'] ) {
+	if ( ! isset( $file['type'] ) || 0 !== strpos( $file['type'], 'image/svg' ) ) {
 		return $file;
 	}
 
@@ -76,102 +76,30 @@ function frostvite_sanitize_svg_upload( $file ) {
 	$svg_content = file_get_contents( $file['tmp_name'] );
 
 	if ( false === $svg_content ) {
-		$file['error'] = __( 'Unable to read SVG file.', 'frostvite' );
+		$file['error'] = __( 'Unable to read SVG file.', 'frost_child' );
 		return $file;
 	}
 
-	// Use DOMDocument for proper XML parsing
-	libxml_use_internal_errors( true );
-	$dom = new DOMDocument();
-	$dom->preserveWhiteSpace = false;
-	$dom->formatOutput       = true;
-
-	// Load SVG content
-	if ( ! $dom->loadXML( $svg_content, LIBXML_NOENT | LIBXML_DTDLOAD ) ) {
-		$file['error'] = __( 'Invalid SVG file format.', 'frostvite' );
-		libxml_clear_errors();
-		return $file;
-	}
-
-	// Dangerous tags to remove
-	$dangerous_tags = array( 'script', 'embed', 'object', 'iframe', 'frame', 'foreignobject' );
-
-	// Dangerous attributes to remove (event handlers and external references)
-	$dangerous_attributes = array(
-		'onload',
-		'onerror',
-		'onclick',
-		'onmouseover',
-		'onmouseout',
-		'onmousemove',
-		'onfocus',
-		'onblur',
-		'onchange',
-		'onsubmit',
-		'onkeydown',
-		'onkeyup',
-		'onkeypress',
-	);
-
-	// Remove dangerous tags using XPath
-	$xpath = new DOMXPath( $dom );
-	foreach ( $dangerous_tags as $tag ) {
-		$nodes = $xpath->query( '//' . $tag );
-		if ( $nodes instanceof DOMNodeList ) {
-			// Iterate over a static list to avoid issues while removing nodes
-			for ( $i = $nodes->length - 1; $i >= 0; $i-- ) {
-				$node = $nodes->item( $i );
-				if ( $node && $node->parentNode ) {
-					$node->parentNode->removeChild( $node );
-				}
-			}
-		}
-	}
-
-	// Scan all elements for dangerous attributes
-	$elements = $xpath->query( '//*' );
-
-	foreach ( $elements as $element ) {
-		// Remove dangerous attributes
-		foreach ( $dangerous_attributes as $attr ) {
-			if ( $element->hasAttribute( $attr ) ) {
-				$element->removeAttribute( $attr );
-			}
-		}
-
-		// Check href and xlink:href for javascript: protocol
-		if ( $element->hasAttribute( 'href' ) ) {
-			$href = $element->getAttribute( 'href' );
-			if ( preg_match( '/^\s*javascript:/i', $href ) ) {
-				$element->removeAttribute( 'href' );
-			}
-		}
-
-		if ( $element->hasAttribute( 'xlink:href' ) ) {
-			$href = $element->getAttribute( 'xlink:href' );
-			if ( preg_match( '/^\s*javascript:/i', $href ) ) {
-				$element->removeAttribute( 'xlink:href' );
-			}
-		}
-	}
-
-	// Save sanitized SVG
-	$sanitized_svg = $dom->saveXML();
+	// Sanitize using enshrined/svg-sanitize library
+	$sanitizer = new Sanitizer();
+	$sanitized_svg = $sanitizer->sanitize( $svg_content );
 
 	if ( false === $sanitized_svg ) {
-		$file['error'] = __( 'Failed to sanitize SVG file.', 'frostvite' );
-		libxml_clear_errors();
+		$file['error'] = __( 'Invalid or potentially malicious SVG file.', 'frost_child' );
 		return $file;
 	}
 
 	// Write sanitized content back
-	file_put_contents( $file['tmp_name'], $sanitized_svg );
+	$bytes_written = file_put_contents( $file['tmp_name'], $sanitized_svg );
 
-	libxml_clear_errors();
+	if ( false === $bytes_written ) {
+		$file['error'] = __( 'Unable to save sanitized SVG file.', 'frost_child' );
+		return $file;
+	}
 
 	return $file;
 }
-add_filter( 'wp_handle_upload_prefilter', 'frostvite_sanitize_svg_upload' );
+add_filter( 'wp_handle_upload_prefilter', 'frost_child_sanitize_svg_upload' );
 
 /**
  * Display SVG thumbnails in media library
@@ -180,7 +108,7 @@ add_filter( 'wp_handle_upload_prefilter', 'frostvite_sanitize_svg_upload' );
  * @param object $attachment The attachment object.
  * @return string Modified response data.
  */
-function frostvite_svg_media_thumbnails( $response, $attachment ) {
+function frost_child_svg_media_thumbnails( $response, $attachment ) {
 	if ( 'image/svg+xml' === $response['mime'] ) {
 		$response['image'] = array(
 			'src' => $response['url'],
@@ -189,4 +117,4 @@ function frostvite_svg_media_thumbnails( $response, $attachment ) {
 
 	return $response;
 }
-add_filter( 'wp_prepare_attachment_for_js', 'frostvite_svg_media_thumbnails', 10, 2 );
+add_filter( 'wp_prepare_attachment_for_js', 'frost_child_svg_media_thumbnails', 10, 2 );

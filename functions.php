@@ -10,6 +10,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 
 /**
+ * Load Composer autoloader
+ */
+require_once get_stylesheet_directory() . '/vendor/autoload.php';
+
+/**
  * Include modular function files
  */
 require_once get_stylesheet_directory() . '/functions/setup.php';
