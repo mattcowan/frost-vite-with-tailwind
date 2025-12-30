@@ -153,10 +153,10 @@ function frost_child_is_dev_environment() {
  * @since 1.0.0
  */
 function frost_child_clear_vite_dev_server_transient() {
-    delete_transient('frost_child_vite_dev_server_running');
+	delete_transient( 'frost_child_vite_dev_server_running' );
 }
-add_action('switch_theme', 'frost_child_clear_vite_dev_server_transient');
-add_action('after_switch_theme', 'frost_child_clear_vite_dev_server_transient');
+add_action( 'switch_theme', 'frost_child_clear_vite_dev_server_transient' );
+add_action( 'after_switch_theme', 'frost_child_clear_vite_dev_server_transient' );
 
 /**
  * Prevent the child theme's style.css from being loaded.

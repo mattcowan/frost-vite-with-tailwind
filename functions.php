@@ -21,14 +21,14 @@ if ( file_exists( $composer_autoload ) ) {
 }
 
 /**
- * Include modular function files
- */
-require_once get_stylesheet_directory() . '/functions/setup.php';
-
-/**
  * Load theme configuration (load first, before other functions)
  */
 require_once get_stylesheet_directory() . '/config.php';
+
+/**
+ * Include modular function files
+ */
+require_once get_stylesheet_directory() . '/functions/setup.php';
 
 /**
  * Load production asset functions (always loaded)

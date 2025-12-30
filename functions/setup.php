@@ -8,12 +8,12 @@
 
 // Prevent direct access
 if ( ! defined( 'ABSPATH' ) ) {
-    exit;
+	exit;
 }
 
 // Disable theme and plugin file editors
 if ( ! defined( 'DISALLOW_FILE_EDIT' ) ) {
-    define( 'DISALLOW_FILE_EDIT', true );
+	define( 'DISALLOW_FILE_EDIT', true );
 }
 
 /**
