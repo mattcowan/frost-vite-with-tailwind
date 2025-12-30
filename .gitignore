@@ -1,8 +1,12 @@
 # Node modules
 node_modules/
 
+# Composer dependencies
+vendor/
+
 # Build output
 dist/
+.vite/
 
 # Logs
 npm-debug.log*
