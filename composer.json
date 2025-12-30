@@ -1,10 +1,9 @@
 {
   "name": "frost/child-theme",
-  "description": "Frost child theme with SVG support",
+  "description": "Frost child theme",
   "type": "wordpress-theme",
   "require": {
-    "php": ">=8.0",
-    "enshrined/svg-sanitize": "^0.20"
+    "php": ">=8.0"
   },
   "config": {
     "optimize-autoloader": true,

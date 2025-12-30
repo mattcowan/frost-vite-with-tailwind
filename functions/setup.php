@@ -22,6 +22,3 @@ if ( ! defined( 'DISALLOW_FILE_EDIT' ) ) {
  * - Child theme styles are compiled and enqueued by Vite (see prod-assets.php)
  * - The default child theme style.css is filtered out (see vite-integration.php)
  */
-
-
-

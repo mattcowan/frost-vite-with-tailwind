@@ -1,24 +1,29 @@
 <?php
-// Prevent direct access
-if ( ! defined( 'ABSPATH' ) ) {
-    exit;
-}
 /**
  * Frost Child Theme Functions
  *
  * @package Frost_Child
  */
 
+// Prevent direct access
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Load Composer autoloader
  */
-require_once get_stylesheet_directory() . '/vendor/autoload.php';
+$composer_autoload = get_stylesheet_directory() . '/vendor/autoload.php';
+if ( file_exists( $composer_autoload ) ) {
+	require_once $composer_autoload;
+} else {
+	error_log( 'Composer autoloader not found at: ' . $composer_autoload );
+}
 
 /**
  * Include modular function files
  */
 require_once get_stylesheet_directory() . '/functions/setup.php';
-require_once get_stylesheet_directory() . '/functions/svg-support.php';
 
 /**
  * Load theme configuration (load first, before other functions)
